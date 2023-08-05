@@ -1,24 +1,24 @@
 <script setup>
 import { ref, reactive } from 'vue'
-import {invoice1, invoice2} from './data/data'
+import { invoice1, invoice2 } from './data/data'
 const data = reactive({
-  sender: 'John Doe',
-  billTo: 'Donuld Duck',
-  shipTo: 'Donuld Ducks Office Address',
-  invoiceNumber: 'DD-016',
-  date: '08/01/2023',
-  dueDate: '08/05/2023',
-  additionalNote: 'Not Applicable',
-  items: [{ "description": "Frontend", "quantity": 23, "rate": 50, "amount": 1150 }, { "description": "Backend", "quantity": 40, "rate": 50, "amount": 2000 }, { "description": "Devops", "quantity": 10, "rate": 150, "amount": 1500 }],
-  notes: 'Account Number: 0199283',
-  terms: 'Send by wire transfer',
+  sender: '',
+  billTo: '',
+  shipTo: '',
+  invoiceNumber: '',
+  date: '',
+  dueDate: '',
+  additionalNote: '',
+  items: [
+    { "description": "", "quantity": 0, "rate": 0, "amount": 0 }
+  ],
+  notes: '',
+  terms: '',
   subtotal: '',
   tax: '',
   total: '',
   balanceDue: ''
 })
-
-
 </script>
 
 <template>
