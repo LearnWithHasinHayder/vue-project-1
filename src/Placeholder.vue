@@ -45,7 +45,7 @@ const data = reactive({
             </div>
             <div class="flex flex-col w-1/2 items-end">
                 <h1 class="mt-12 text-4xl uppercase text-right mb-5">Invoice</h1>
-                <input class="w-[400px] text-right" type="text" placeholder="Invoice Number">
+                <input class="w-[200px] text-right" type="text" placeholder="Invoice Number">
                 <div class="mt-10 flex-y-5 text-right space-y-3 w-full">
                     <p>
                         <span>Date</span>
