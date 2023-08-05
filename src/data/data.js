@@ -10,7 +10,7 @@ const invoice1 = {
     notes: 'Account Number: 0199283',
     terms: 'Send by wire transfer',
     subtotal: '',
-    tax: '',
+    tax: '10',
     total: '',
     balanceDue: ''
 }
@@ -23,11 +23,11 @@ const invoice2 = {
     date: '07/31/2023',
     dueDate: '08/03/2023',
     additionalNote: 'Not Applicable',
-    items: [{ "description": "Burger", "quantity": 5, "rate": 4, "amount": 20 }, { "description": "Bread", "quantity": 3, "rate": 2, "amount": 6 }, { "description": "French Fry", "quantity": 6, "rate": 3, "amount": 18 }],
+    items: [{ "description": "Water", "quantity": 5, "rate": 1, "amount": 0 }, { "description": "Burger", "quantity": 5, "rate": 4, "amount": 20 }, { "description": "Bread", "quantity": 3, "rate": 2, "amount": 6 }, { "description": "French Fry", "quantity": 6, "rate": 3, "amount": 18 }],
     notes: 'Counter Number 3',
     terms: 'Pay by cash',
     subtotal: '',
-    tax: '',
+    tax: '20',
     total: '',
     balanceDue: ''
 }

@@ -1,45 +1,77 @@
 <script setup>
-import { ref, reactive } from 'vue'
-import {invoice1, invoice2} from './data/data'
+import { reactive, computed } from 'vue'
+import {invoice1, invoice2} from './data/data.js'
 const data = reactive({
-  sender: 'John Doe',
-  billTo: 'Donuld Duck',
-  shipTo: 'Donuld Ducks Office Address',
-  invoiceNumber: 'DD-016',
-  date: '08/01/2023',
-  dueDate: '08/05/2023',
-  additionalNote: 'Not Applicable',
-  items: [{ "description": "Frontend", "quantity": 23, "rate": 50, "amount": 1150 }, { "description": "Backend", "quantity": 40, "rate": 50, "amount": 2000 }, { "description": "Devops", "quantity": 10, "rate": 150, "amount": 1500 }],
-  notes: 'Account Number: 0199283',
-  terms: 'Send by wire transfer',
+  sender: '',
+  billTo: '',
+  shipTo: '',
+  invoiceNumber: '',
+  date: '',
+  dueDate: '',
+  additionalNote: '',
+  items: [
+    {
+      description: '',
+      quantity: '',
+      rate: '',
+      amount: ''
+    }
+  ],
+  notes: '',
+  terms: '',
   subtotal: '',
   tax: '',
   total: '',
-  balanceDue: ''
+  // balanceDue: ''
 })
 
-function addnewItem() {
-  data.items.push({
-    description: '',
-    quantity: '0',
-    rate: '0',
-    amount: '0'
-  })
-}
+// const getComputedSubtotal = computed(() => {
+//   let subtotal = 0
+//   data.items.forEach(item => {
+//     subtotal += item.amount
+//   })
+//   return subtotal
+// })
 
 function getSubTotal() {
-  let total = 0
-  data.items.forEach((item) => {
-    total += item.amount
+  let subtotal = 0
+  data.items.forEach(item => {
+    subtotal += item.amount
   })
-  data.subtotal = total
+  data.subtotal = subtotal
+  return subtotal
+}
+
+function getTotal() {
+  const tax = data.subtotal * data.tax / 100
+  const total = data.subtotal + tax
+  data.total = total
   return total
 }
 
-function getTotalAfterTax() {
-  const tax = data.subtotal * data.tax / 100
-  data.total = data.subtotal + tax
-  return data.total
+function addMoreItem() {
+  data.items.push({
+    description: '',
+    quantity: '',
+    rate: '',
+    amount: ''
+  })
+}
+
+function saveData(){
+  console.log(data)
+  // fetch('http://localhost:3000/invoices', {
+  //   method: 'POST',
+  //   headers: {
+  //     'Content-Type': 'application/json'
+  //   },
+  //   body: JSON.stringify(data)
+  // })
+}
+
+
+function updateAmount(item) {
+  item.amount = item.quantity * item.rate
 }
 </script>
 
@@ -67,19 +99,19 @@ function getTotalAfterTax() {
       </div>
       <div class="flex flex-col w-1/2 items-end">
         <h1 class="mt-12 text-4xl uppercase text-right mb-5">Invoice</h1>
-        <input class="w-[200px] text-right" type="text" placeholder="Invoice Number">
+        <input v-model="data.invoiceNumber" class="w-[200px] text-right" type="text" placeholder="Invoice Number">
         <div class="mt-10 flex-y-5 text-right space-y-3 w-full">
           <p>
             <span>Date</span>
-            <input class="ml-2 w-[200px]" v-model="data.date">
+            <input v-model="data.date" class="ml-2 w-[200px] ">
           </p>
           <p>
             <span>Due Date</span>
-            <input type="date" class="ml-2 w-[200px]" v-model="data.dueDate">
+            <input v-model="data.dueDate" class="ml-2 w-[200px]">
           </p>
           <p>
             <span>Additional Note</span>
-            <input class="ml-2 w-[200px]" type="text" v-model="data.additionalNote">
+            <input v-model="data.additionalNote" class="ml-2 w-[200px]" type="text">
           </p>
         </div>
       </div>
@@ -94,29 +126,34 @@ function getTotalAfterTax() {
         </tr>
         <tr v-for="(item, index) in data.items" :key="index">
           <td class="py-1">
-            <input v-model="item['description']" class="w-full pl-5" type="text" placeholder="Description" />
+            <input v-model="item.description" class="w-full pl-5" type="text" placeholder="Description" />
           </td>
           <td class="">
-            <input v-model="item['quantity']" class="w-full" type="number" placeholder="Quantity" />
+            <input v-model="item.quantity" class="w-full" type="number" placeholder="Quantity" />
           </td>
           <td class="">
-            <input v-model="item['rate']" class="w-full" type="number" placeholder="Rate">
+            <!-- <input @input="updateAmount(item)" v-model="item.rate" class="w-full" type="number" placeholder="Rate"> -->
+            <input v-model="item.rate" class="w-full" type="number" placeholder="Rate">
           </td>
-          <td class="pr-5 py-1 text-right text-gray-800">
-            $ {{ item['amount'] = item['quantity'] * item['rate'] }}
+          <td class="py-1 pr-5 text-right text-gray-800">
+            <!-- <input type="text" v-model="item.amount"> -->
+            $ {{ item.amount = item.quantity * item.rate }}
           </td>
         </tr>
       </table>
-      <button class="mt-5 bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" @click="addnewItem()">
+      <button @click="addMoreItem()" class="mt-5 bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
         Add More
       </button>
-      <button class="ml-5 mt-5 bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" @click="Object.assign(data,invoice1)">
-        Load Invoice #1
+      <button @click="saveData()" class="ml-2 mt-5 bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+        Save
       </button>
-      <button class="ml-5 mt-5 bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" @click="Object.assign(data,invoice2)">
-        Load Invoice #2
+      <button @click="Object.assign(data,invoice1)" class="ml-2 mt-5 bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+        Load Invoice 1
       </button>
-      <p>
+      <button @click="Object.assign(data,invoice2)" class="ml-2 mt-5 bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+        Load Invoice 2
+      </button>
+      <p class="mt-10">
         {{ data }}
       </p>
     </div>
@@ -124,28 +161,28 @@ function getTotalAfterTax() {
       <div class="flex justify-between">
         <div class="flex flex-col space-y-5 w-1/2">
           <span>Notes</span>
-          <textarea name="" id="" cols="30" rows="2" v-model="data.notes"></textarea>
+          <textarea v-model="data.notes" name="" id="" cols="30" rows="2"></textarea>
           <span>Terms</span>
-          <textarea name="" id="" cols="30" rows="2" v-model="data.terms"></textarea>
+          <textarea v-model="data.terms" name="" id="" cols="30" rows="2"></textarea>
         </div>
         <div class="flex flex-col w-1/2 items-end">
           <div class="mt-10 flex-y-5 text-right space-y-3 w-full">
             <p>
               <span>Subtotal</span>
-              <input readonly class="focus:ring-0 focus:ring-offset-0 text-right ml-2 pr-4 w-[200px] border-0" placeholder="Subtotal" :value="getSubTotal()">
+              <input :value="getSubTotal()" readonly class="focus:ring-0 focus:ring-offset-0 text-right ml-2 pr-4 w-[200px] border-0" placeholder="Subtotal">
             </p>
             <p>
               <span>Tax</span>
-              <input type="number" class="text-right w-[200px] ml-2" v-model="data.tax">
+              <input v-model="data.tax" type="number" class="tax text-right w-[200px] ml-2">
             </p>
             <p>
               <span>Total</span>
-              <input readonly class="focus:ring-0 focus:ring-offset-0 text-right ml-2 pr-4 w-[200px] border-0" placeholder="Total" :value="getTotalAfterTax()">
+              <input :value="getTotal()" readonly class="focus:ring-0 focus:ring-offset-0 text-right ml-2 pr-4 w-[200px] border-0" placeholder="Total">
             </p>
-            <p>
+            <!-- <p>
               <span>Balace Due</span>
               <input readonly class="focus:ring-0 focus:ring-offset-0 text-right ml-2 pr-4 w-[200px] border-0" placeholder="Balance">
-            </p>
+            </p> -->
           </div>
         </div>
       </div>
@@ -156,8 +193,10 @@ function getTotalAfterTax() {
 
 <style scoped>
 input,
+input,
 textarea {
   border: 1px solid #ddd !important;
   padding: 5px;
+  border-radius: 5px;
 }
 </style>
