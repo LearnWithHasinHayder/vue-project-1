@@ -1,39 +1,31 @@
 <script setup>
-import { reactive, computed } from 'vue'
-import {invoice1, invoice2} from './data/data.js'
+import { reactive } from 'vue'
+import { invoice1, invoice2 } from './data/data';
 const data = reactive({
-  sender: '',
-  billTo: '',
-  shipTo: '',
-  invoiceNumber: '',
-  date: '',
-  dueDate: '',
-  additionalNote: '',
-  items: [
+  sender:'',
+  billTo:'',
+  shipTo:'',
+  invoiceNumber:'',
+  date:'',
+  dueDate:'',
+  additionalNote:'',
+  items:[
     {
-      description: '',
-      quantity: '',
-      rate: '',
-      amount: ''
+      description:'',
+      quantity:'',
+      rate:'',
+      amount:''
     }
   ],
-  notes: '',
-  terms: '',
-  subtotal: '',
-  tax: '',
-  total: '',
-  // balanceDue: ''
+  notes:'',
+  terms:'',
+  subtotal:'',
+  tax:'',
+  total:'' 
 })
 
-// const getComputedSubtotal = computed(() => {
-//   let subtotal = 0
-//   data.items.forEach(item => {
-//     subtotal += item.amount
-//   })
-//   return subtotal
-// })
 
-function getSubTotal() {
+function getSubtotal(){
   let subtotal = 0
   data.items.forEach(item => {
     subtotal += item.amount
@@ -42,36 +34,19 @@ function getSubTotal() {
   return subtotal
 }
 
-function getTotal() {
-  const tax = data.subtotal * data.tax / 100
-  const total = data.subtotal + tax
-  data.total = total
-  return total
+function getTotal(){
+  const tax = data.subtotal * data.tax / 100 
+  data.total = data.subtotal + tax
+  return data.total
 }
 
-function addMoreItem() {
+function addMoreItem(){
   data.items.push({
-    description: '',
-    quantity: '',
-    rate: '',
-    amount: ''
+    description:'',
+    quantity:'',
+    rate:'',
+    amount:''
   })
-}
-
-function saveData(){
-  console.log(data)
-  // fetch('http://localhost:3000/invoices', {
-  //   method: 'POST',
-  //   headers: {
-  //     'Content-Type': 'application/json'
-  //   },
-  //   body: JSON.stringify(data)
-  // })
-}
-
-
-function updateAmount(item) {
-  item.amount = item.quantity * item.rate
 }
 </script>
 
@@ -80,20 +55,20 @@ function updateAmount(item) {
     <div class="flex justify-between">
       <div class="flex flex-col space-y-5 w-1/2s">
         <div class=" ">
-          <img class="w-40" src="https://www.shutterstock.com/image-vector/invoice-typographic-stamp-sign-badge-600w-1027820257.jpg" alt="">
+          <img class="w-40" src="//www.shutterstock.com/image-vector/invoice-typographic-stamp-sign-badge-600w-1027820257.jpg" alt="">
         </div>
         <p class="mt-5">
           Sender
         </p>
-        <textarea name="" id="" cols="30" rows="2" v-model="data.sender"></textarea>
+        <textarea v-model="data.sender" name="" id="" cols="30" rows="2"></textarea>
         <div class="flex space-x-2">
           <div class="flex flex-col">
             <span>Bill to</span>
-            <textarea name="" id="" cols="30" rows="2" v-model="data.billTo"></textarea>
+            <textarea v-model="data.billTo" name="" id="" cols="30" rows="2"></textarea>
           </div>
           <div class="flex flex-col">
             <span>Ship to</span>
-            <textarea name="" id="" cols="30" rows="2" v-model="data.shipTo"></textarea>
+            <textarea v-model="data.shipTo" name="" id="" cols="30" rows="2"></textarea>
           </div>
         </div>
       </div>
@@ -132,20 +107,15 @@ function updateAmount(item) {
             <input v-model="item.quantity" class="w-full" type="number" placeholder="Quantity" />
           </td>
           <td class="">
-            <!-- <input @input="updateAmount(item)" v-model="item.rate" class="w-full" type="number" placeholder="Rate"> -->
             <input v-model="item.rate" class="w-full" type="number" placeholder="Rate">
           </td>
           <td class="py-1 pr-5 text-right text-gray-800">
-            <!-- <input type="text" v-model="item.amount"> -->
-            $ {{ item.amount = item.quantity * item.rate }}
+            $ {{ item.amount =  item.quantity * item.rate }}
           </td>
         </tr>
       </table>
       <button @click="addMoreItem()" class="mt-5 bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
         Add More
-      </button>
-      <button @click="saveData()" class="ml-2 mt-5 bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
-        Save
       </button>
       <button @click="Object.assign(data,invoice1)" class="ml-2 mt-5 bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
         Load Invoice 1
@@ -153,7 +123,7 @@ function updateAmount(item) {
       <button @click="Object.assign(data,invoice2)" class="ml-2 mt-5 bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
         Load Invoice 2
       </button>
-      <p class="mt-10">
+      <p class="mt-5">
         {{ data }}
       </p>
     </div>
@@ -169,7 +139,7 @@ function updateAmount(item) {
           <div class="mt-10 flex-y-5 text-right space-y-3 w-full">
             <p>
               <span>Subtotal</span>
-              <input :value="getSubTotal()" readonly class="focus:ring-0 focus:ring-offset-0 text-right ml-2 pr-4 w-[200px] border-0" placeholder="Subtotal">
+              <input :value="getSubtotal()" readonly class="focus:ring-0 focus:ring-offset-0 text-right ml-2 pr-4 w-[200px] border-0" placeholder="Subtotal">
             </p>
             <p>
               <span>Tax</span>
@@ -179,10 +149,6 @@ function updateAmount(item) {
               <span>Total</span>
               <input :value="getTotal()" readonly class="focus:ring-0 focus:ring-offset-0 text-right ml-2 pr-4 w-[200px] border-0" placeholder="Total">
             </p>
-            <!-- <p>
-              <span>Balace Due</span>
-              <input readonly class="focus:ring-0 focus:ring-offset-0 text-right ml-2 pr-4 w-[200px] border-0" placeholder="Balance">
-            </p> -->
           </div>
         </div>
       </div>
@@ -197,6 +163,7 @@ input,
 textarea {
   border: 1px solid #ddd !important;
   padding: 5px;
-  border-radius: 5px;
 }
 </style>
+
+
